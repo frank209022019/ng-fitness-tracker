@@ -22,6 +22,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
+import { FirestoreService } from './firestore/firestore.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { environment } from '../environments/environment';
     AngularFirestoreModule,
     AngularFireAnalyticsModule
   ],
-  providers: [AuthService, TrainingService],
+  providers: [AuthService, TrainingService, FirestoreService],
   bootstrap: [AppComponent],
   entryComponents: [StopTrainingComponent]
 })

@@ -6,7 +6,7 @@
         <mat-form-field appearance="legacy" [style.width.%]="100">
           <mat-label>Select Exercise</mat-label>
           <mat-select placeholder="Select Exercise" #trainingSelect  formControlName="exerciseId">
-            <mat-option *ngFor="let train of availableExercises" [value]="train.id">
+            <mat-option *ngFor="let train of availableExercises | async" [value]="train.name">
               {{train.name}}
             </mat-option>
           </mat-select>

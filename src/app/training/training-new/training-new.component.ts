@@ -1,9 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSelect } from '@angular/material/select';
-import { Exercise } from '../exercise.model';
+import { Observable } from 'rxjs';
+import { FIRESTORE_COLLECTION } from 'src/app/firestore/firestore-definition';
+import { FirestoreService } from 'src/app/firestore/firestore.service';
 import { TrainingService } from '../training.service';
-import { NewTrainingDef } from './new-training-def';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-training-new',
@@ -12,16 +13,24 @@ import { NewTrainingDef } from './new-training-def';
 })
 export class TrainingNewComponent implements OnInit {
 
-  availableExercises: Exercise[] = [];
+  // availableExercises: Exercise[] = [];
+  availableExercises: Observable<any>;
+
   form: FormGroup;
 
   @Output() trainingStart = new EventEmitter<string>();
 
-  constructor(private trainingService: TrainingService, private formBuilder: FormBuilder) { }
+  constructor(private trainingService: TrainingService, private formBuilder: FormBuilder, private firestoreService: FirestoreService, private db: AngularFirestore) { }
 
   ngOnInit() {
     this.buildForm();
-    this.availableExercises = this.trainingService.getAvailableExercises();
+    this.getExercises();
+    // this.availableExercises = this.trainingService.getAvailableExercises();
+  }
+
+  getExercises(){
+  //  this.availableExercises = this.firestoreService.getCollection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
+   this.availableExercises = this.db.collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
   }
 
   buildForm(){
