@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { FIRESTORE_COLLECTION } from 'src/app/firestore/firestore-definition';
 import { FirestoreService } from 'src/app/firestore/firestore.service';
 import { TrainingService } from '../training.service';
@@ -30,7 +30,22 @@ export class TrainingNewComponent implements OnInit {
 
   getExercises(){
   //  this.availableExercises = this.firestoreService.getCollection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
-   this.availableExercises = this.db.collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
+  //  this.availableExercises = this.db.collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
+  this.db.collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES)
+    .snapshotChanges()
+    .map(docArray => {
+      docArray.map(doc => {
+        return {
+          id: doc.payload.doc.id,
+          ...doc.payload.doc.data
+        }
+      })
+    })
+    .subscribe(result => {
+    result.forEach(res => {
+      console.log(res.payload.doc.data());
+    });
+  });
   }
 
   buildForm(){

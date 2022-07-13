@@ -9,7 +9,7 @@ export class FirestoreService {
 
   constructor(private db: AngularFirestore) { }
 
-  getCollection(collectionName: string): Observable<any> {
-    return this.db.collection(collectionName).valueChanges();
+  getCollection(collectionName: string) {
+    return this.db.collection(collectionName);
   }
 }
