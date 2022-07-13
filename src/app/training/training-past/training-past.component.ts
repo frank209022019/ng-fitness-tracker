@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 
@@ -11,7 +12,7 @@ import { TrainingService } from '../training.service';
   templateUrl: './training-past.component.html',
   styleUrls: ['./training-past.component.css']
 })
-export class TrainingPastComponent implements OnInit, AfterViewInit {
+export class TrainingPastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dataSource = new MatTableDataSource<Exercise>();
   displayedColumns: string[] = ['id', 'date', 'name', 'duration', 'calories', 'state'];
@@ -21,14 +22,22 @@ export class TrainingPastComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
+  private exChangedSubscription: Subscription;
+  totalRecords = 0;
+
   constructor(private trainingService: TrainingService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.buildForm();
-    this.dataSource.data = this.trainingService.getCompletedOrCancelledExercises();
+    this.trainingService.fetchCompletedOrCancelledExercises();
+    this.exChangedSubscription = this.trainingService.finishedExercisesChanged.subscribe((result: Exercise[]) => {
+      this.dataSource.data = result;
+      this.totalRecords = result.length;
+    })
+
     this.form.controls['search'].valueChanges.subscribe((result: string) => {
-      if(result){
-       this.dataSource.filter = result.trim().toLowerCase();
+      if (result) {
+        this.dataSource.filter = result.trim().toLowerCase();
       }
     })
   }
@@ -39,6 +48,10 @@ export class TrainingPastComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.exChangedSubscription.unsubscribe();
   }
 
   get s() {

@@ -1,55 +1,52 @@
-<div class="container" fxLayout="column" fxLayoutAlign="center center">
-
-  <div fxLayoutAlign="center center">
-    <form fxFlex="80" [formGroup]="form">
-      <mat-form-field class="past-search">
-        <input matInput type="text" formControlName="search" placeholder="Filter">
-      </mat-form-field>
-    </form>
-  </div>
-
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort [style.width.%]="100">
-
-    <!-- Position Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-    </ng-container>
-
-    <!-- Date Column -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
-
-    <!-- Duartion Column -->
-    <ng-container matColumnDef="duration">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Duartion </th>
-      <td mat-cell *matCellDef="let element"> {{element.duration | number}} </td>
-    </ng-container>
-
-    <!-- Calories Column -->
-    <ng-container matColumnDef="calories">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Calories </th>
-      <td mat-cell *matCellDef="let element"> {{element.calories | number}} </td>
-    </ng-container>
-
-    <!-- State Column -->
-    <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> State </th>
-      <td mat-cell *matCellDef="let element"> {{element.state}} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  <mat-paginator #paginator [pageSize]="1" [pageSizeOptions]="[1, 5, 10, 20]">
-  </mat-paginator>
+<div fxLayoutAlign="center center">
+  <form fxFlex="80" [formGroup]="form">
+    <mat-form-field class="past-search">
+      <input matInput type="text" formControlName="search" placeholder="Filter">
+    </mat-form-field>
+  </form>
 </div>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort [style.width.%]="100">
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <!-- Date Column -->
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.date.toDate() | date}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <!-- Duartion Column -->
+  <ng-container matColumnDef="duration">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Duartion </th>
+    <td mat-cell *matCellDef="let element"> {{element.duration | number}} </td>
+  </ng-container>
+
+  <!-- Calories Column -->
+  <ng-container matColumnDef="calories">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Calories </th>
+    <td mat-cell *matCellDef="let element"> {{element.calories | number}} </td>
+  </ng-container>
+
+  <!-- State Column -->
+  <ng-container matColumnDef="state">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> State </th>
+    <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[1, 5, 10, 20]">
+</mat-paginator>

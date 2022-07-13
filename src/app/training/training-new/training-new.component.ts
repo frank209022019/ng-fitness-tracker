@@ -1,60 +1,45 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, Observable } from 'rxjs';
-import { FIRESTORE_COLLECTION } from 'src/app/firestore/firestore-definition';
-import { FirestoreService } from 'src/app/firestore/firestore.service';
+import { Subscription } from 'rxjs';
 import { TrainingService } from '../training.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Exercise } from '../exercise.model';
 
 @Component({
   selector: 'app-training-new',
   templateUrl: './training-new.component.html',
   styleUrls: ['./training-new.component.css']
 })
-export class TrainingNewComponent implements OnInit {
+export class TrainingNewComponent implements OnInit, OnDestroy {
 
-  // availableExercises: Exercise[] = [];
-  availableExercises: Observable<any>;
-
+  availableExercises: Exercise[] = [];
+  exerciseSubscription: Subscription;
   form: FormGroup;
 
   @Output() trainingStart = new EventEmitter<string>();
 
-  constructor(private trainingService: TrainingService, private formBuilder: FormBuilder, private firestoreService: FirestoreService, private db: AngularFirestore) { }
+  constructor(private trainingService: TrainingService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.buildForm();
-    this.getExercises();
-    // this.availableExercises = this.trainingService.getAvailableExercises();
-  }
-
-  getExercises(){
-  //  this.availableExercises = this.firestoreService.getCollection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
-  //  this.availableExercises = this.db.collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES).valueChanges();
-  this.db.collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES)
-    .snapshotChanges()
-    .map(docArray => {
-      docArray.map(doc => {
-        return {
-          id: doc.payload.doc.id,
-          ...doc.payload.doc.data
-        }
-      })
-    })
-    .subscribe(result => {
-    result.forEach(res => {
-      console.log(res.payload.doc.data());
+    //  Load exercises
+    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe((result: Exercise[]) => {
+      this.availableExercises = result;
     });
-  });
+    this.trainingService.fetchAvailableExercises();
   }
 
-  buildForm(){
+  ngOnDestroy(): void {
+   this.exerciseSubscription.unsubscribe();
+  }
+
+
+  buildForm() {
     this.form = this.formBuilder.group({
       exerciseId: ['', [Validators.required]]
     })
   }
 
-  resetForm(){
+  resetForm() {
     this.form.reset();
     this.form.updateValueAndValidity();
   }
@@ -63,12 +48,12 @@ export class TrainingNewComponent implements OnInit {
     return this.form.get('exerciseId');
   }
 
-  get f(){
+  get f() {
     return this.form;
   }
 
-  onStartTraining(){
-    if(this.form.controls['exerciseId'].value === ''){
+  onStartTraining() {
+    if (this.form.controls['exerciseId'].value === '') {
       alert('Select a training to begin.')
       return;
     }
