@@ -26,7 +26,7 @@ export class TrainingHomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
   }
 
   onTrainingStart(eventData: any) {

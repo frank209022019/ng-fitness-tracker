@@ -23,6 +23,7 @@ import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
 import { FirestoreService } from './firestore/firestore.service';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { FirestoreService } from './firestore/firestore.service';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireAnalyticsModule
+    AngularFireAnalyticsModule,
+    AngularFireAuthModule
   ],
   providers: [AuthService, TrainingService, FirestoreService],
   bootstrap: [AppComponent],

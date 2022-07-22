@@ -49,6 +49,9 @@ export class TrainingService {
   }
 
   startExercise(selectedId: string) {
+    //  Select a single document and updateing, etc...
+    //  this.db.doc(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES + "/" + selectedId).update({ lastSelectd: new Date() })
+
     const selectedExercise = this.availableExercises.find(ex => ex.id === selectedId);
     if (selectedExercise) {
       this.runningExercise = selectedExercise;

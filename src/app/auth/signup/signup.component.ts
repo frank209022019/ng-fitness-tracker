@@ -56,6 +56,7 @@ export class SignupComponent implements OnInit {
   }
 
   onFormSubmit() {
+    debugger
     if (!this.form.valid) {
       alert('Invalid form, please complete all required fields correctly!');
       return;
