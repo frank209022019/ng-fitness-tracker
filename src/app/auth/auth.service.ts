@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { TrainingService } from '../training/training.service';
 import { AuthData, AuthUser } from './auth-models';
 
 @Injectable({
@@ -9,10 +10,26 @@ import { AuthData, AuthUser } from './auth-models';
 })
 export class AuthService {
 
-  private currentUser?: AuthUser;
   authChange = new Subject<boolean>();
+  private isAuthenticated: boolean;
 
-  constructor(private router: Router, private afAuth: AngularFireAuth) { }
+  constructor(private router: Router, private afAuth: AngularFireAuth, private trainingService: TrainingService) { }
+
+  initAuthListener(){
+    //  Check for the current auth state of FireStore Auth
+    this.afAuth.authState.subscribe(res => {
+      if(res){
+        this.isAuthenticated = true;
+        this.authChange.next(this.isAuthenticated);
+        this.router.navigate(['training']);
+      } else{
+        this.isAuthenticated = false;
+        this.authChange.next(this.isAuthenticated);
+        this.trainingService.cancelSubscriptions();
+        this.router.navigate(['signin']);
+      }
+    })
+  }
 
   registerUser(user: AuthData) {
     this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
@@ -26,35 +43,23 @@ export class AuthService {
   loginUser(user: AuthData) {
     this.afAuth.signInWithEmailAndPassword(user.email, user.password)
     .then(res => {
-      this.authSuccessfully(user, res);
     }).catch(err => {
-      alert(err.error)
+      alert(err)
     })
   }
 
   logoutUser() {
-    this.currentUser = undefined;
-    this.authChange.next(false);
-    this.router.navigate(['signin']);
+      this.afAuth.signOut();
   }
-
-
-
 
   getUser() {
     //  object spread - returns the private object, but prevents manipulating the private object in the service
-    return { ...this.currentUser };
+    if(this.isAuthenticated){
+      return this.afAuth.currentUser;
+    }
   }
 
   isAuth() {
-    return this.currentUser !== undefined && this.currentUser !== null;
-  }
-
-  authSuccessfully(user: AuthData, authResult: any) {
-    debugger
-    const authUser: AuthUser = { email: user.email, userId: authResult.user.uid, refreshToken: authResult.user.refreshToken };
-    this.currentUser = authUser;
-    this.authChange.next(true);
-    this.router.navigate(['training']);
+    return this.isAuthenticated;
   }
 }

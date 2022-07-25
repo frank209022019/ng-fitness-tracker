@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map, Subject } from 'rxjs';
+import { map, Subject, Subscription } from 'rxjs';
 import { FIRESTORE_COLLECTION } from '../firestore/firestore-definition';
 import { Exercise } from './exercise.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TrainingService {
+export class TrainingService implements OnDestroy {
 
   //  private - prevent modification from outside the TrainingService
   private availableExercises: Exercise[] = [
@@ -23,28 +23,34 @@ export class TrainingService {
   exercisesChanged = new Subject<Exercise[]>();
   finishedExercisesChanged = new Subject<Exercise[]>();
 
+  private fbSubs: Subscription[] = [];
+
 
   constructor(private db: AngularFirestore) { }
 
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
+  }
+
   fetchAvailableExercises() {
-    this.db
-    .collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES)
-    .snapshotChanges()
-    .pipe(map(docArray => {
-      return docArray.map((doc: any) => {
-        return {
-          id: doc.payload.doc.id,
-          name: doc.payload.doc.data()['name'],
-          duration: doc.payload.doc.data()['duration'],
-          calories: doc.payload.doc.data()['calories']
-          // ...(doc.payload.doc.data() as Record<string, unknown>)
-        };
-      })
-    }))
-    .subscribe((exercises: Exercise[]) => {
-      this.availableExercises = exercises;
-      this.exercisesChanged.next([...this.availableExercises]);
-    });
+    this.fbSubs.push(this.db
+      .collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES)
+      .snapshotChanges()
+      .pipe(map(docArray => {
+        return docArray.map((doc: any) => {
+          return {
+            id: doc.payload.doc.id,
+            name: doc.payload.doc.data()['name'],
+            duration: doc.payload.doc.data()['duration'],
+            calories: doc.payload.doc.data()['calories']
+            // ...(doc.payload.doc.data() as Record<string, unknown>)
+          };
+        })
+      }))
+      .subscribe((exercises: Exercise[]) => {
+        this.availableExercises = exercises;
+        this.exercisesChanged.next([...this.availableExercises]);
+      }));
     // return this.availableExercises.slice();
   }
 
@@ -91,17 +97,20 @@ export class TrainingService {
     this.exerciseChanged.next(null);
   }
 
-  fetchCompletedOrCancelledExercises(){
-    this.db.collection(FIRESTORE_COLLECTION.FINISHED_EXERCISES)
+  fetchCompletedOrCancelledExercises() {
+    this.fbSubs.push(this.db.collection(FIRESTORE_COLLECTION.FINISHED_EXERCISES)
       .valueChanges()
       .subscribe((result: any) => {
         // this.finishedExercises = result as Exercise[];
         this.finishedExercisesChanged.next(result);
-      })
-    // return this.exercises.slice();
+      }));
   }
 
-  private addToDatabase(exercise: Exercise){
+  cancelSubscriptions(){
+    this.fbSubs.forEach(i => i.unsubscribe());
+  }
+
+  private addToDatabase(exercise: Exercise) {
     this.db.collection(FIRESTORE_COLLECTION.FINISHED_EXERCISES).add(exercise);
   }
 
