@@ -1,26 +1,37 @@
-<section [style.margin-top.px]="25">
-  <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" [formGroup]="form" (ngSubmit)="onFormSubmit()">
-    <!--Email-->
-    <mat-form-field appearance="legacy" hintLabel="Please provide a valid email address">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" placeholder="Your Email" autocomplete="new-email" formControlName="email">
-      <mat-error *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-        Please provide a valid email address
-      </mat-error>
-    </mat-form-field>
-    <!--Password-->
-    <mat-form-field appearance="legacy" hintLabel="Please provide a valid password">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" placeholder="Your Password" autocomplete="new-password" formControlName="password"
-        minlength="6">
-      <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
-        Please provide a valid password
-      </mat-error>
-    </mat-form-field>
-    <!--Buttons-->
-    <div class="row mt-10">
-      <button id="btnSubmitForm" type="submit" mat-raised-button color="primary">Submit</button>
-      <button id="btnClearForm" type="button" mat-raised-button color="accent" (click)="resetForm()">Reset</button>
-    </div>
-  </form>
-</section>
+<!--Page Content-->
+<ng-container *ngIf="!isLoading">
+  <section [style.margin-top.px]="25">
+    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" [formGroup]="form"
+      (ngSubmit)="onFormSubmit()">
+      <!--Email-->
+      <mat-form-field appearance="legacy" hintLabel="Please provide a valid email address">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" placeholder="Your Email" autocomplete="new-email" formControlName="email">
+        <mat-error *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          Please provide a valid email address
+        </mat-error>
+      </mat-form-field>
+      <!--Password-->
+      <mat-form-field appearance="legacy" hintLabel="Please provide a valid password">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" placeholder="Your Password" autocomplete="new-password"
+          formControlName="password" minlength="6">
+        <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+          Please provide a valid password
+        </mat-error>
+      </mat-form-field>
+      <!--Buttons-->
+      <div class="row mt-10">
+        <button id="btnSubmitForm" type="submit" mat-raised-button color="primary">Submit</button>
+        <button id="btnClearForm" type="button" mat-raised-button color="accent" (click)="resetForm()">Reset</button>
+      </div>
+    </form>
+  </section>>
+</ng-container>
+
+<!--Loader-->
+<ng-container *ngIf="isLoading">
+  <section fxLayout="row" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-container>

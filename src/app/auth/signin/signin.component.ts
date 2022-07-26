@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { UiService } from 'src/app/shared/ui.service';
 import { AuthData } from '../auth-models';
 import { AuthService } from '../auth.service';
 
@@ -8,16 +10,27 @@ import { AuthService } from '../auth.service';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   maxDate: Date;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
+  isLoading = false;
+  private loadingSub: Subscription;
+
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private uiService: UiService) { }
 
   ngOnInit() {
+    this.loadingSub = this.uiService.loadingStateChanged.subscribe((res: boolean) => {
+      this.isLoading = res;
+    })
+
     this.setMaxDateForDatePicker();
     this.buildForm();
+  }
+
+  ngOnDestroy(): void {
+    this.loadingSub.unsubscribe();
   }
 
   get email() {
