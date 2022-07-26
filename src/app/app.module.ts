@@ -39,7 +39,6 @@ import { SharedModule } from './shared/shared.module';
     AngularFireAnalyticsModule,
     AuthModule,
     TrainingModule,
-    SharedModule
   ],
   providers: [AuthService, TrainingService, FirestoreService, UiService],
   bootstrap: [AppComponent],

@@ -60,11 +60,9 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   onFormSubmit() {
     if (!this.form.valid) {
-      alert('Invalid form, please complete all required fields correctly!');
+      this.uiService.showSnackbar('Invalid form, please complete all required fields correctly!', null, 3000);
       return;
     }
-
-
 
     const model: AuthData = {
       email: this.form.value.email,

@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
       return true;
     } else{
       this.router.navigate(['signin'])
-      // alert('Failed to authenticate user.');
       return false;
     }
 

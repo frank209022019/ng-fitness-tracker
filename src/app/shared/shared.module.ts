@@ -6,7 +6,6 @@ import { MaterialModule } from "../material.module";
 
 @NgModule({
   declarations: [
-
   ],
   imports: [
     CommonModule,
@@ -16,7 +15,11 @@ import { MaterialModule } from "../material.module";
     FlexLayoutModule
   ],
   exports: [
-
+    CommonModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    FlexLayoutModule
   ]
 })
 

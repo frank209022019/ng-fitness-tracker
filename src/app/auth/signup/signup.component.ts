@@ -30,7 +30,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.loadingSub) this.loadingSub.unsubscribe();
+    if (this.loadingSub) this.loadingSub.unsubscribe();
   }
 
   get email() {
@@ -71,7 +71,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   onFormSubmit() {
     debugger
     if (!this.form.valid) {
-      alert('Invalid form, please complete all required fields correctly!');
+      this.uiService.showSnackbar('Invalid form, please complete all required fields correctly!', null, 3000);
       return;
     }
 

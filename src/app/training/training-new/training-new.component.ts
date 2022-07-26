@@ -68,7 +68,8 @@ export class TrainingNewComponent implements OnInit, OnDestroy {
 
   onStartTraining() {
     if (this.form.controls['exerciseId'].value === '') {
-      alert('Select a training to begin.')
+      this.uiService.showSnackbar('Select a training to begin.', null, 3000);
+
       return;
     }
 
