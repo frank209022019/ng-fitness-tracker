@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Subject, Subscription } from 'rxjs';
 import { FIRESTORE_COLLECTION } from '../firestore/firestore-definition';
+import { UiService } from '../shared/ui.service';
 import { Exercise } from './exercise.model';
 
 @Injectable({
@@ -26,7 +27,7 @@ export class TrainingService implements OnDestroy {
   private fbSubs: Subscription[] = [];
 
 
-  constructor(private db: AngularFirestore) { }
+  constructor(private db: AngularFirestore, private uiService: UiService) { }
 
   ngOnDestroy(): void {
     throw new Error('Method not implemented.');
@@ -37,6 +38,7 @@ export class TrainingService implements OnDestroy {
       .collection(FIRESTORE_COLLECTION.AVAILABLE_EXERCISES)
       .snapshotChanges()
       .pipe(map(docArray => {
+        // throw(new Error)
         return docArray.map((doc: any) => {
           return {
             id: doc.payload.doc.id,
@@ -50,7 +52,12 @@ export class TrainingService implements OnDestroy {
       .subscribe((exercises: Exercise[]) => {
         this.availableExercises = exercises;
         this.exercisesChanged.next([...this.availableExercises]);
-      }));
+      },
+        error => {
+          this.uiService.loadingStateChanged.next(false);
+          this.uiService.showSnackbar('Fetching exercises failed. Please try again later.', null, 3000);
+          this.exercisesChanged.next(null);
+        }));
     // return this.availableExercises.slice();
   }
 
@@ -106,7 +113,7 @@ export class TrainingService implements OnDestroy {
       }));
   }
 
-  cancelSubscriptions(){
+  cancelSubscriptions() {
     this.fbSubs.forEach(i => i.unsubscribe());
   }
 

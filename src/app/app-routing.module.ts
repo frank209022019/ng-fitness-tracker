@@ -4,7 +4,7 @@ import { AuthGuard } from "./auth/auth.guard";
 import { SigninComponent } from "./auth/signin/signin.component";
 import { SignupComponent } from "./auth/signup/signup.component";
 import { TrainingHomeComponent } from "./training/training-home/training-home.component";
-import { WelcomeComponent } from "./welcome/welcome.component";
+import { WelcomeComponent } from "./shared/welcome/welcome.component";
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent },

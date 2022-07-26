@@ -1,17 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppComponent } from './app.component';
-import { SigninComponent } from './auth/signin/signin.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { TrainingHomeComponent } from './training/training-home/training-home.component';
-import { TrainingCurrentComponent } from './training/training-current/training-current.component';
-import { TrainingNewComponent } from './training/training-new/training-new.component';
-import { TrainingPastComponent } from './training/training-past/training-past.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { WelcomeComponent } from './shared/welcome/welcome.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
@@ -23,22 +16,17 @@ import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
 import { FirestoreService } from './firestore/firestore.service';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { UiService } from './shared/ui.service';
+import { AuthModule } from './auth/auth.module';
+import { TrainingModule } from './training/training.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    SigninComponent,
-    TrainingPastComponent,
-    TrainingNewComponent,
-    TrainingCurrentComponent,
-    TrainingHomeComponent,
     WelcomeComponent,
     HeaderComponent,
-    SidenavListComponent,
-    StopTrainingComponent
+    SidenavListComponent
   ],
   imports: [
     BrowserModule,
@@ -46,12 +34,12 @@ import { UiService } from './shared/ui.service';
     MaterialModule,
     AppRoutingModule,
     FlexLayoutModule,
-    FormsModule,
-    ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAnalyticsModule,
-    AngularFireAuthModule
+    AuthModule,
+    TrainingModule,
+    SharedModule
   ],
   providers: [AuthService, TrainingService, FirestoreService, UiService],
   bootstrap: [AppComponent],
