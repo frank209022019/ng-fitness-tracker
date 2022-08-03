@@ -19,7 +19,6 @@ import { FirestoreService } from './firestore/firestore.service';
 import { UiService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
 import { TrainingModule } from './training/training.module';
-import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [

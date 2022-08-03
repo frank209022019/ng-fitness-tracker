@@ -69,7 +69,6 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   onFormSubmit() {
-    debugger
     if (!this.form.valid) {
       this.uiService.showSnackbar('Invalid form, please complete all required fields correctly!', null, 3000);
       return;
