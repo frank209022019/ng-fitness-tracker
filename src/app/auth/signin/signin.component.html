@@ -1,5 +1,5 @@
 <!--Page Content-->
-<ng-container *ngIf="!isLoading">
+<ng-container *ngIf="!(isLoading$ | async)">
   <section [style.margin-top.px]="25">
     <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" [formGroup]="form"
       (ngSubmit)="onFormSubmit()">
@@ -26,11 +26,11 @@
         <button id="btnClearForm" type="button" mat-raised-button color="accent" (click)="resetForm()">Reset</button>
       </div>
     </form>
-  </section>>
+  </section>
 </ng-container>
 
 <!--Loader-->
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="isLoading$ | async">
   <section fxLayout="row" fxLayoutAlign="center center">
     <mat-spinner></mat-spinner>
   </section>

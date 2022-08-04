@@ -19,6 +19,8 @@ import { FirestoreService } from './firestore/firestore.service';
 import { UiService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
 import { TrainingModule } from './training/training.module';
+import { StoreModule } from '@ngrx/store';
+import { AppReducer } from './ngrx-store/app.reducer';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { TrainingModule } from './training/training.module';
     AngularFireAnalyticsModule,
     AuthModule,
     TrainingModule,
+    //  Initialize store and assign a key to AppReducer
+    StoreModule.forRoot({ ui: AppReducer })
   ],
   providers: [AuthService, TrainingService, FirestoreService, UiService],
   bootstrap: [AppComponent],
