@@ -7,7 +7,7 @@ import { AuthData } from '../auth-models';
 import { AuthService } from '../auth.service';
 import * as fromApp from './../../ngrx-store/app.reducer'
 import { map } from 'rxjs/operators';
-import 'rxjs/add/operator/map'
+
 
 @Component({
   selector: 'app-signin',
